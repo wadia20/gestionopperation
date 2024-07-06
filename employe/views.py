@@ -8,6 +8,9 @@ from .form import *
 def home(request):
     return render(request, "home.html")
 
+def dashboard(request):
+    return render(request, "dashboard.html")
+
 #login page 
 def login_employe(request):
     if request.method == 'POST':
@@ -16,10 +19,10 @@ def login_employe(request):
         user = authenticate(request, email=username, password=password)
         if user is not None and user.is_active:
             login(request, user)
-            return redirect("home")
+            return redirect("employe:dashboard")
         else:
             messages.warning(request, 'something went wrong')
-            return redirect('users:login')
+            return redirect('employe:login')
     return render(request, 'login.html')
 
 

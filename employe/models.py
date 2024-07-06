@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User,AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class employe(models.Model):
     email = models.EmailField(primary_key=True)
