@@ -17,3 +17,17 @@ class Client(models.Model):
 
     def __str__(self):
         return self.client_id
+    
+
+
+
+class Operation(models.Model):
+    client_id = models.CharField(max_length=100)
+    operation = models.CharField(max_length=100)
+    operation_date = models.DateField()
+    observation = models.TextField()
+    piece_jointe = models.FileField(upload_to='piece_jointe/')
+    confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.client_id} - {self.operation}"

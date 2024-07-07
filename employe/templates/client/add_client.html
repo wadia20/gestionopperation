@@ -1,5 +1,18 @@
 {% extends 'base.html' %}
-{% block content %}*
+{% block content %}
+
+<!-- Alerts -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+            <strong>{{ message|escape }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+<!-- /Alerts -->
 <!-- Page Title -->
 <div class="container mt-0">
     <div class="row breadcrumb-bar">
@@ -30,47 +43,49 @@
     <div class="col-md-12">
         <div class="widget-area-2 proclinic-box-shadow">
             <h3 class="widget-title">Add client</h3>
-            <form>
+            <form method="POST" action="{% url 'employe:add_client' %}">
+
+                {% csrf_token %}
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="client-name">client id</label>
-                        <input type="id" class="form-control" placeholder="client id" id="client-id">
+                        <label for="client-id">Client ID</label>
+                        <input type="text" class="form-control" placeholder="Client ID" id="client-id" name="client_id" required>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="client-name">client Name</label>
-                        <input type="text" class="form-control" placeholder="client name" id="client-name">
+                        <label for="client-name">Client Name</label>
+                        <input type="text" class="form-control" placeholder="Client Name" id="client-name" name="client_name" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dob">Date Of Birth</label>
-                        <input type="date" placeholder="Date of Birth" class="form-control" id="dob">
+                        <input type="date" placeholder="Date of Birth" class="form-control" id="dob" name="client_birth" required>
                     </div>
                    
                     <div class="form-group col-md-6">
                         <label for="phone">Phone</label>
-                        <input type="text" placeholder="Phone" class="form-control" id="phone">
+                        <input type="text" placeholder="Phone" class="form-control" id="phone" name="client_phone" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="email">Email</label>
-                        <input type="email" placeholder="email" class="form-control" id="Email">
+                        <input type="email" placeholder="Email" class="form-control" id="Email" name="client_email" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="gender">Gender</label>
-                        <select class="form-control" id="gender">
-                            <option>Male</option>
-                            <option>Female</option>
-                            
+                        <select class="form-control" id="gender" name="client_gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="exampleFormControlTextarea1">Address</label>
-                        <textarea placeholder="Address" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <label for="address">Address</label>
+                        <textarea placeholder="Address" class="form-control" id="address" rows="3" name="client_Address" required></textarea>
                     </div>
                     
                                                         
                     <div class="form-check col-md-12 mb-2">
                         <div class="text-left">
                             <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" id="ex-check-2">
+                                <input class="custom-control-input" type="checkbox" id="ex-check-2" required>
                                 <label class="custom-control-label" for="ex-check-2">Please Confirm</label>
                             </div>
                         </div>
@@ -80,20 +95,6 @@
                     </div>
                 </div>
             </form>
-            <!-- Alerts-->
-          <!--<div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Successfully Done!</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>-->  
-            <!-- /Alerts-->
         </div>
     </div>
     <!-- /Widget Item -->
@@ -102,5 +103,3 @@
 <!-- /Main Content -->
 
 {% endblock %}
-
-
