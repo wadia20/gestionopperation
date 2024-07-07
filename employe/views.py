@@ -25,4 +25,7 @@ def login_employe(request):
             return redirect('employe:login')
     return render(request,'login.html')
 
+#add client
+def ADD_CLIENT(request):
+    return render(request,'client/add_client.html')
 

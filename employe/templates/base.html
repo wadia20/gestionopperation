@@ -153,7 +153,7 @@
 								<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
 								 aria-expanded="false"><span class="ti-wheelchair"></span> clients</a>
 								<div class="dropdown-menu">
-									<a class="dropdown-item" href="add-client.html">Add client</a>
+									<a class="dropdown-item" href="{% url 'employe:add_client' %}">Add client</a>
 									<a class="dropdown-item" href="clients.html">All clients</a>
 									<a class="dropdown-item" href="about-client.html">client Details</a>
 									<a class="dropdown-item" href="edit-client.html">Edit client</a>
@@ -192,10 +192,15 @@
 			</div>
 			<!-- /Menu -->
 
+			{% block content %}*
+
+
+			{% endblock %}
+
             <!--Copy Rights-->
 			<div class="container">
 				<div class="d-sm-flex justify-content-center">
-				  <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
+				  <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2024 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
 				</div>
 			</div>
 			<!-- /Copy Rights-->
