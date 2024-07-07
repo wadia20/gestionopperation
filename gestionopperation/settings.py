@@ -130,7 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default backend
-    'employe.backends.EmailBackend',  # Custom backend
+    
 ]
 
 #AUTH_USER_MODEL = 'employe.employe'  # Adjust 'your_app' to your actual app name

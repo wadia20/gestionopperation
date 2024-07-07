@@ -8,21 +8,21 @@ from .form import *
 def home(request):
     return render(request, "home.html")
 
-def dashboard(request):
-    return render(request, "dashboard.html")
+def base(request):
+    return render(request, "base.html")
 
 #login page 
 def login_employe(request):
     if request.method == 'POST':
         username = request.POST.get('login')
         password = request.POST.get('pass')
-        user = authenticate(request, email=username, password=password)
-        if user is not None and user.is_active:
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
             login(request, user)
-            return redirect("employe:dashboard")
+            return redirect("employe:base")
         else:
             messages.warning(request, 'something went wrong')
             return redirect('employe:login')
-    return render(request, 'login.html')
+    return render(request,'login.html')
 
 
