@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .form import *
-from employe.models import Client
+from employe.models import Client,Operation
 # home page
 def home(request):
     return render(request, "home.html")
@@ -70,12 +70,13 @@ def ADD_CLIENT(request):
 
 #add operation
 from django.shortcuts import render, redirect
-from .form import OperationForm
+
 
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.contrib import messages
 from .form import OperationForm
+from django.views.generic import ListView
 
 def ADD_OPERATION(request):
     if request.method == 'POST':
@@ -92,3 +93,35 @@ def ADD_OPERATION(request):
         form = OperationForm()  # Ensure form is initialized for GET request
 
     return render(request, 'client/add_operation.html', {'form': form})
+
+
+from django.views.generic import ListView
+#showing list of operations
+class OperationListView(ListView):
+    model = Operation
+    template_name = 'client/operation_list.html'
+    context_object_name = 'operations'
+
+from django.shortcuts import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+
+def operation_list_pdf(request):
+    operations = Operation.objects.all()
+    template_path = 'client/operation_list_pdf.html'
+    context = {'operations': operations}
+    template = get_template(template_path)
+    html = template.render(context)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="operation_items.pdf"'
+
+    # Generate PDF using xhtml2pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response
+    )
+    
+    # If PDF generation succeeded, return the response
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
