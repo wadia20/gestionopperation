@@ -4,7 +4,11 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .form import *
-from employe.models import Client
+from employe.models import Client,Operation
+from django.views import View
+from django.template.loader import get_template
+from django.http import HttpResponse
+from xhtml2pdf import pisa
 # home page
 def home(request):
     return render(request, "home.html")
@@ -92,3 +96,49 @@ def ADD_OPERATION(request):
         form = OperationForm()  # Ensure form is initialized for GET request
 
     return render(request, 'client/add_operation.html', {'form': form})
+
+
+# afficher les cients avec leurs operations
+
+class Clients_show(View):
+    def get(self, request):
+        clients = Client.objects.all()
+        for client in clients:
+            operations_count = Operation.objects.filter(client_id=client.client_id).count()
+            client.operations_count = operations_count
+            client.operations = Operation.objects.filter(client_id=client.client_id)
+
+        context = {
+            'clients': clients
+        }
+        return render(request, 'client/show_client.html', context)
+
+    #pdf
+
+from django.shortcuts import get_object_or_404, HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from .models import Operation
+
+def Generate_pdf(request, client_id):
+    client = get_object_or_404(Client, client_id=client_id)
+    operations = Operation.objects.filter(client_id=client_id)
+    filename = request.GET.get('filename', 'default_filename.pdf')  # Retrieve filename from query string
+
+    template_path = 'pdf_template.html'
+    context = {
+        'client': client,
+        'operations': operations,
+    }
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Create PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response

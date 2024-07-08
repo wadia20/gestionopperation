@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Operations Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 5px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Client Operations Report</h1>
+        <h2>{{ client.client_Name }} ({{ client.client_id }})</h2>
+        <p><strong>Date of Birth:</strong> {{ client.Date_Of_Birth }}</p>
+        <p><strong>Phone:</strong> {{ client.Phone }}</p>
+        <p><strong>Email:</strong> {{ client.Email }}</p>
+        <p><strong>Gender:</strong> {{ client.Gender }}</p>
+        <p><strong>Address:</strong> {{ client.Address }}</p>
+        
+        <h2>Operations</h2>
+        <ul>
+            {% for operation in operations %}
+                <li>
+                    <strong>{{ operation.operation }}</strong> on {{ operation.operation_date }}
+                    {% if operation.piece_jointe %}
+                        <a href="{{ operation.piece_jointe.url }}">Download Attachment</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

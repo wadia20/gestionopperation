@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Page Title -->
+<div class="container mt-0">
+    <div class="row breadcrumb-bar">
+        <div class="col-md-6">
+            <h3 class="block-title">Recherche client</h3>
+        </div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="index.html">
+                        <span class="ti-home"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">clients</li>
+                <li class="breadcrumb-item active">Recherche client</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- /Page Title -->
+
+<!-- /Breadcrumb -->
+<!-- Main Content -->
+<div class="container">
+
+    <div class="row">
+        {% for client in clients %}
+        <div class="col-md-6 mb-4">
+            <div class="card proclinic-box-shadow">
+                <div class="card-header proclinic-bg">
+                    <h2 class="widget-title proclinic-text-color">{{ client.client_Name }} ({{ client.client_id }})</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Date of Birth:</strong> {{ client.Date_Of_Birth }}</p>
+                    <p><strong>Phone:</strong> {{ client.Phone }}</p>
+                    <p><strong>Email:</strong> {{ client.Email }}</p>
+                    <p><strong>Gender:</strong> {{ client.Gender }}</p>
+                    <p><strong>Address:</strong> {{ client.Address }}</p>
+                    <p><strong>Number of Operations:</strong> {{ client.operations_count }}</p>
+                    <h4>Operations</h4>
+                    <ul class="list-group">
+                        {% for operation in client.operations %}
+                        <li class="list-group-item">
+                            {{ operation.operation }} on {{ operation.operation_date }}
+                            {% if operation.piece_jointe %}
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Download
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="{% url 'employe:generate_pdf' client_id=client.client_id %}?filename={{ operation.piece_jointe.name }}">PDF</a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+<!-- /Main Content -->
+
+{% endblock %}
