@@ -31,8 +31,6 @@
                 <th>Operation</th>
                 <th>Operation Date</th>
                 <th>Observation</th>
-                
-                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -42,14 +40,6 @@
                 <td>{{ operation.operation }}</td>
                 <td>{{ operation.operation_date }}</td>
                 <td>{{ operation.observation }}</td>
-                
-                <td>
-                    {% if operation.confirmed %}
-                    <span style="color: green;">Confirmed</span>
-                    {% else %}
-                    <span style="color: orange;">Pending</span>
-                    {% endif %}
-                </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -114,22 +114,25 @@ from xhtml2pdf import pisa
 
 
 def operation_list_pdf(request):
-    operations = Operation.objects.all()
+    query = request.GET.get('query')
+    if query:
+        operations = Operation.objects.filter(client_id__icontains=query)
+    else:
+        operations = Operation.objects.all()
+    
     template_path = 'client/operation_list_pdf.html'
     context = {'operations': operations}
     template = get_template(template_path)
     html = template.render(context)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="operation_items.pdf"'
-
-    # Generate PDF using xhtml2pdf
-    pisa_status = pisa.CreatePDF(
-        html, dest=response
-    )
     
-    # If PDF generation succeeded, return the response
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="operations_{query}.pdf"'
+    
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    
     return response
 # afficher les cients avec leurs operations
 
@@ -175,3 +178,14 @@ def Generate_pdf(request, client_id):
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+#recherche d'operarion
+from django.shortcuts import render
+from .models import Operation
+
+def search_operations(request):
+    query = request.GET.get('query')
+    if query:
+        operations = Operation.objects.filter(client_id__icontains=query)
+    else:
+        operations = Operation.objects.all()
+    return render(request, 'client/operation_list.html', {'operations': operations})

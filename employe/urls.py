@@ -15,4 +15,5 @@ urlpatterns = [
 
     path('client/show', Clients_show.as_view(), name='client_show'),
     path('clients/<str:client_id>/pdf/', views.Generate_pdf, name='generate_pdf'),
+    path('searchoperation/', views.search_operations, name='search_operations'),
 ]
