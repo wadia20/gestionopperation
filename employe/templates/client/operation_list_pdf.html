@@ -7,10 +7,20 @@
         body {
             font-family: Arial, sans-serif;
         }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
         th, td {
             border: 1px solid #dddddd;
@@ -23,26 +33,28 @@
     </style>
 </head>
 <body>
-    <h1>Operations List</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Client ID</th>
-                <th>Operation</th>
-                <th>Operation Date</th>
-                <th>Observation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for operation in operations %}
-            <tr>
-                <td>{{ operation.client_id }}</td>
-                <td>{{ operation.operation }}</td>
-                <td>{{ operation.operation_date }}</td>
-                <td>{{ operation.observation }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container">
+        <h1>Operations List for the client</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Client ID</th>
+                    <th>Operation</th>
+                    <th>Operation Date</th>
+                    <th>Observation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for operation in operations %}
+                <tr>
+                    <td>{{ operation.client_id }}</td>
+                    <td>{{ operation.operation }}</td>
+                    <td>{{ operation.operation_date }}</td>
+                    <td>{{ operation.observation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

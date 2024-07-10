@@ -136,6 +136,10 @@ def operation_list_pdf(request):
     return response
 # afficher les cients avec leurs operations
 
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Client, Operation
+
 class Clients_show(View):
     def get(self, request):
         clients = Client.objects.all()
@@ -149,22 +153,36 @@ class Clients_show(View):
         }
         return render(request, 'client/show_client.html', context)
 
-    #pdf
+def search_clients(request):
+    query = request.GET.get('query', '').strip()
+    clients = Client.objects.filter(client_id=query) if query else Client.objects.none()
+    for client in clients:
+        operations_count = Operation.objects.filter(client_id=client.client_id).count()
+        client.operations_count = operations_count
+        client.operations = Operation.objects.filter(client_id=client.client_id)
+
+    context = {
+        'clients': clients,
+        'query': query
+    }
+    return render(request, 'client/show_client.html', context)
+
+#pdf
 
 from django.shortcuts import get_object_or_404, HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from .models import Operation
 
-def Generate_pdf(request, client_id):
+def Generate_pdf(request, client_id, operation_id):
     client = get_object_or_404(Client, client_id=client_id)
-    operations = Operation.objects.filter(client_id=client_id)
+    operation = get_object_or_404(Operation, id=operation_id, client_id=client_id)
     filename = request.GET.get('filename', 'default_filename.pdf')  # Retrieve filename from query string
 
     template_path = 'pdf_template.html'
     context = {
         'client': client,
-        'operations': operations,
+        'operations': [operation],  # Pass only the selected operation
     }
 
     response = HttpResponse(content_type='application/pdf')
@@ -178,6 +196,7 @@ def Generate_pdf(request, client_id):
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+
 #recherche d'operarion
 from django.shortcuts import render
 from .models import Operation
@@ -189,3 +208,7 @@ def search_operations(request):
     else:
         operations = Operation.objects.all()
     return render(request, 'client/operation_list.html', {'operations': operations})
+
+
+
+

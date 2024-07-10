@@ -22,48 +22,60 @@
 </div>
 <!-- /Page Title -->
 
-<!-- /Breadcrumb -->
+<!-- Search Form -->
+<div class="container">
+    <form method="get" action="{% url 'employe:search_clients' %}">
+        <div class="form-group">
+            <label for="query">Search by Client ID:</label>
+            <input type="text" name="query" id="query" class="form-control" placeholder="Enter Client ID" value="{{ request.GET.query }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
 <!-- Main Content -->
 <div class="container">
-
     <div class="row">
-        {% for client in clients %}
-        <div class="col-md-6 mb-4">
-            <div class="card proclinic-box-shadow">
-                <div class="card-header proclinic-bg">
-                    <h2 class="widget-title proclinic-text-color">{{ client.client_Name }} ({{ client.client_id }})</h2>
-                </div>
-                <div class="card-body">
-                    <p><strong>Date of Birth:</strong> {{ client.Date_Of_Birth }}</p>
-                    <p><strong>Phone:</strong> {{ client.Phone }}</p>
-                    <p><strong>Email:</strong> {{ client.Email }}</p>
-                    <p><strong>Gender:</strong> {{ client.Gender }}</p>
-                    <p><strong>Address:</strong> {{ client.Address }}</p>
-                    <p><strong>Number of Operations:</strong> {{ client.operations_count }}</p>
-                    <h4>Operations</h4>
-                    <ul class="list-group">
-                        {% for operation in client.operations %}
-                        <li class="list-group-item">
-                            {{ operation.operation }} on {{ operation.operation_date }}
-                            {% if operation.piece_jointe %}
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Download
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="{% url 'employe:generate_pdf' client_id=client.client_id %}?filename={{ operation.piece_jointe.name }}">PDF</a>
+        {% if clients %}
+            {% for client in clients %}
+            <div class="col-md-6 mb-4">
+                <div class="card proclinic-box-shadow">
+                    <div class="card-header proclinic-bg">
+                        <h2 class="widget-title proclinic-text-color">{{ client.client_Name }} ({{ client.client_id }})</h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Date of Birth:</strong> {{ client.Date_Of_Birth }}</p>
+                        <p><strong>Phone:</strong> {{ client.Phone }}</p>
+                        <p><strong>Email:</strong> {{ client.Email }}</p>
+                        <p><strong>Gender:</strong> {{ client.Gender }}</p>
+                        <p><strong>Address:</strong> {{ client.Address }}</p>
+                        <p><strong>Number of Operations:</strong> {{ client.operations_count }}</p>
+                        <h4>Operations</h4>
+                        <ul class="list-group">
+                            {% for operation in client.operations %}
+                            <li class="list-group-item">
+                                {{ operation.operation }} on {{ operation.operation_date }}
+                                {% if operation.piece_jointe %}
+                                <div class="dropdown">
+                                    <button class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Download
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="{% url 'employe:generate_pdf' client_id=client.client_id operation_id=operation.id %}?filename={{ operation.piece_jointe.name }}">PDF</a>
+                                    </div>
                                 </div>
-                            </div>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p>No clients found with the given ID.</p>
+        {% endif %}
     </div>
-
 </div>
 <!-- /Main Content -->
 
