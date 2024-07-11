@@ -103,15 +103,14 @@ def ADD_OPERATION(request):
 
 from django.views.generic import ListView
 #showing list of operations
-class OperationListView(ListView):
-    model = Operation
-    template_name = 'client/operation_list.html'
-    context_object_name = 'operations'
 
 from django.shortcuts import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-
+class OperationListView(ListView):
+    model = Operation
+    template_name = 'client/operation_list.html'
+    context_object_name = 'operations'
 
 def operation_list_pdf(request):
     query = request.GET.get('query')
@@ -209,6 +208,16 @@ def search_operations(request):
         operations = Operation.objects.all()
     return render(request, 'client/operation_list.html', {'operations': operations})
 
+from django.views.generic.base import TemplateView
 
 
+class DashboardView(TemplateView):
+    template_name = 'dashboard.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['operations'] = Operation.objects.order_by('-operation_date')[:5]
+        context['employees'] = Employee.objects.all()
+        return context
+
+    
