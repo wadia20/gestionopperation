@@ -16,7 +16,7 @@ def home(request):
     return render(request, "home.html")
 
 def base(request):
-    return render(request, "base.html")
+    return render(request, "dashboard.html")
 
 #login page 
 def login_employe(request):

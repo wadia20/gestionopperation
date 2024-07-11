@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login_employe, name='login'),
     path('base/', views.base, name='base'),
+    
     path('client/add',views.ADD_CLIENT,name='add_client'),
     path('operation/add',views.ADD_OPERATION,name='add_operation'),
     path('operation/all',OperationListView.as_view(),name='all_operation'),
