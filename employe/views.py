@@ -211,6 +211,19 @@ def search_operations(request):
 from django.views.generic.base import TemplateView
 
 
+from django.views.generic import TemplateView
+from .models import Operation, Employee, Client
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+from django.views.generic import TemplateView
+from .models import Operation, Client
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+import json
+
+
 class DashboardView(TemplateView):
     template_name = 'dashboard.html'
 
@@ -218,6 +231,22 @@ class DashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['operations'] = Operation.objects.order_by('-operation_date')[:5]
         context['employees'] = Employee.objects.all()
-        return context
+        context['clients_count'] = Client.objects.count()
 
-    
+        total_operations = Operation.objects.count()
+        operations_per_day = Operation.objects.filter(operation_date=timezone.now().date()).count()
+
+        # Prepare data for Operations Month by Month chart
+        operations_by_month = Operation.objects.extra(select={'month': "strftime('%Y-%m', operation_date)"}).values('month').annotate(count=Count('id')).order_by('month')
+        operations_by_month = list(operations_by_month)
+        context['operations_by_month'] = json.dumps(operations_by_month)
+
+        # Prepare data for Clients Month by Month chart
+        Clients_by_month = Client.objects.extra(select={'month': "strftime('%Y-%m', Date_Of_Birth)"}).values('month').annotate(count=Count('id')).order_by('month')
+        Clients_by_month = list(Clients_by_month)
+        context['Clients_by_month'] = json.dumps(Clients_by_month)
+
+        context['total_operations'] = total_operations
+        context['operations_per_day'] = operations_per_day
+
+        return context
