@@ -250,3 +250,8 @@ class DashboardView(TemplateView):
         context['operations_per_day'] = operations_per_day
 
         return context
+
+
+def logout_employe(request):
+    auth.logout(request)
+    return redirect('employe:login')

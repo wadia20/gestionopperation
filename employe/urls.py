@@ -7,6 +7,7 @@ app_name = "employe"
 urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login_employe, name='login'),
+    path('login/', views.logout_employe, name='logoutw'),
     
     path('dashboard/', views.DashboardView.as_view(), name='base'),
     path('client/add',views.ADD_CLIENT,name='add_client'),
