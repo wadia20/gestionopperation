@@ -17,7 +17,11 @@ def home(request):
 
 def base(request):
     return render(request, "dashboard.html")
+#logout
 
+def logout_employe(request):
+    auth.logout(request)
+    return redirect('employe:login')
 #login page 
 def login_employe(request):
     if request.method == 'POST':
@@ -251,7 +255,3 @@ class DashboardView(TemplateView):
 
         return context
 
-
-def logout_employe(request):
-    auth.logout(request)
-    return redirect('employe:login')

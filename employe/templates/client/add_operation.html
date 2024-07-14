@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<!-- Page Title -->
+<div class="container mt-0">
+    <div class="row breadcrumb-bar">
+        <div class="col-md-6">
+            <h3 class="block-title">Ajouter une operation
+            </h3>
+        </div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'employe:base' %}">
+                        <span class="ti-home"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Operations</li>
+                <li class="breadcrumb-item active">Ajouter une operation
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- /Page Title -->
 <!-- Alerts -->
 {% if messages %}
     {% for message in messages %}
@@ -13,19 +34,20 @@
     {% endfor %}
 {% endif %}
 <!-- /Alerts -->
+
 <!-- Main Content -->
 <div class="container">
     <div class="row">
         <!-- Widget Item -->
         <div class="col-md-12">
             <div class="widget-area-2 proclinic-box-shadow">
-                <h3 class="widget-title">Add operation</h3>
+                <h3 class="widget-title">Ajouter une operation</h3>
                 <form method="POST" action="{% url 'employe:add_operation' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="client-id">client ID</label>
-                            <input type="text" class="form-control" placeholder="client ID" id="client-id" name="client_id">
+                            <label for="client-id">CIN du client </label>
+                            <input type="text" class="form-control" placeholder="CIN" id="client-id" name="client_id">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="operation">Operation</label>
@@ -33,14 +55,10 @@
                                 <option value="Demande de visa">Demande de visa</option>
                                 <option value="Demande de relevé">Demande de relevé</option>
                                 <option value="Demande de certification">Demande de certification</option>
+                                
                             </select>
                         </div>
                         
-                        <div class="form-group col-md-6">
-                            <label for="operation-date">Operation Date</label>
-                            <input type="date" placeholder="operation Date" class="form-control" id="operation-date" name="operation_date">
-                        </div>
-
                         <div class="form-group col-md-6">
                             <label for="piece-jointe">Piece Jointe</label>
                             <input type="file" class="form-control" id="piece-jointe" name="piece_jointe">
@@ -55,23 +73,20 @@
                             <div class="text-left">
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" type="checkbox" id="ex-check-2" name="confirmed">
-                                    <label class="custom-control-label" for="ex-check-2">Please Confirm</label>
+                                    <label class="custom-control-label" for="ex-check-2">Veuillez confirmer
+                                    </label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group col-md-6 mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Soumettre</button>
                         </div>
                     </div>
                 </form>
-                
             </div>
         </div>
         <!-- /Widget Item -->
     </div>
 </div>
-
-
-
 <!-- /Main Content -->
 {% endblock %}

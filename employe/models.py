@@ -11,6 +11,7 @@ class Client(models.Model):
     client_id=models.CharField(max_length=100,editable=False, unique=True)
     client_Name=models.CharField(max_length=100)
     Date_Of_Birth=models.CharField(max_length=100)
+    created_date = models.DateField(default=timezone.now)
     Phone=models.IntegerField()
     Email=models.CharField(max_length=100)
     Gender=models.CharField(max_length=100)
@@ -25,7 +26,7 @@ class Client(models.Model):
 class Operation(models.Model):
     client_id = models.CharField(max_length=100)
     operation = models.CharField(max_length=100)
-    operation_date = models.DateField()
+    operation_date = models.DateField(default=timezone.now)
     observation = models.TextField()
     piece_jointe = models.FileField(upload_to='piece_jointe/')
     confirmed = models.BooleanField(default=False)

@@ -5,17 +5,17 @@
 <div class="container mt-0">
     <div class="row breadcrumb-bar">
         <div class="col-md-6">
-            <h3 class="block-title">Recherche client</h3>
+            <h3 class="block-title">Recherche d'operations</h3>
         </div>
         <div class="col-md-6">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="index.html">
+                    <a href="{% url 'employe:base' %}">
                         <span class="ti-home"></span>
                     </a>
                 </li>
-                <li class="breadcrumb-item">clients</li>
-                <li class="breadcrumb-item active">Recherche client</li>
+                <li class="breadcrumb-item">Operations</li>
+                <li class="breadcrumb-item active">Recherche d'operations</li>
             </ol>
         </div>
     </div>
@@ -26,42 +26,54 @@
 <div class="container">
     <form method="get" action="{% url 'employe:search_operations' %}">
         <div class="form-group">
-            <label for="query">Search by Client ID:</label>
-            <input type="text" name="query" id="query" class="form-control" placeholder="Enter Client ID" value="{{ request.GET.query }}">
+            <label for="query">Recherche par CIN:</label>
+            <input type="text" name="query" id="query" class="form-control" placeholder="Entrez CIN du client
+            " value="{{ request.GET.query }}">
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">Recherche</button>
     </form>
 </div>
 
-<!-- /Breadcrumb -->
 <!-- Main Content -->
-<div class="container mt-4">
+<div class="container">
     <div class="row">
-        {% for operation in operations %}
-        <div class="col-md-6 mb-4">
-            <div class="card proclinic-box-shadow">
-                <div class="card-header proclinic-bg">
-                    <h2 class="widget-title proclinic-text-color">{{ operation.client_id }} - {{ operation.operation }}</h2>
-                </div>
-                <div class="card-body">
-                    <p><strong>Operation Date:</strong> {{ operation.operation_date }}</p>
-                    <p><strong>Observation:</strong> {{ operation.observation }}</p>
-                    {% if operation.piece_jointe %}
-                    <div class="dropdown">
-                        
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{{ operation.piece_jointe.url }}">PDF</a>
-                        </div>
-                    </div>
-                    {% endif %}
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Liste d'Operations</h3>
+                <div class="table-responsive mb-3">
+                    <table id="tableId" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th> CIN du Client</th>
+                                <th>Operation</th>
+                                <th>Date d'Operation </th>
+                                <th>Observation</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for operation in operations %}
+                            <tr>
+                                <td>{{ operation.client_id }}</td>
+                                <td>{{ operation.operation }}</td>
+                                <td>{{ operation.operation_date }}</td>
+                                <td>{{ operation.observation }}</td>
+                               
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                  
+                    <!-- /Export links -->
+                    
+                    <a href="{% url 'employe:operationlistpdf' %}?query={{ request.GET.query }}" class="btn btn-primary">Download PDF</a>
                 </div>
             </div>
         </div>
-        {% endfor %}
-
+        <!-- /Widget Item -->
     </div>
-    <a href="{% url 'employe:operationlistpdf' %}?query={{ request.GET.query }}" class="btn btn-primary">Download PDF</a>
-
 </div>
 <!-- /Main Content -->
 
