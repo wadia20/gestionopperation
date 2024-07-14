@@ -212,16 +212,8 @@ def search_operations(request):
         operations = Operation.objects.all()
     return render(request, 'client/operation_list.html', {'operations': operations})
 
-from django.views.generic.base import TemplateView
-
 
 from django.views.generic import TemplateView
-from .models import Operation, Employee, Client
-from django.db.models import Count
-from django.utils import timezone
-from datetime import timedelta
-from django.views.generic import TemplateView
-from .models import Operation, Client
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
@@ -255,3 +247,15 @@ class DashboardView(TemplateView):
 
         return context
 
+
+def operation_details(request,client_id):
+
+    operations = Operation.objects.filter(client_id=client_id)
+    clientid= client_id
+    context = {
+        'client_id': clientid,
+        'operations': operations,
+    } 
+
+    return render(request, 'client/specifique_operations.html',context)
+    
