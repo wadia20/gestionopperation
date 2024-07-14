@@ -246,7 +246,7 @@ class DashboardView(TemplateView):
         context['operations_by_month'] = json.dumps(operations_by_month)
 
         # Prepare data for Clients Month by Month chart
-        Clients_by_month = Client.objects.extra(select={'month': "strftime('%Y-%m', Date_Of_Birth)"}).values('month').annotate(count=Count('id')).order_by('month')
+        Clients_by_month = Client.objects.extra(select={'month': "strftime('%Y-%m',created_date)"}).values('month').annotate(count=Count('id')).order_by('month')
         Clients_by_month = list(Clients_by_month)
         context['Clients_by_month'] = json.dumps(Clients_by_month)
 
