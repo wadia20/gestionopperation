@@ -69,47 +69,8 @@
 								<span title="Fullscreen" class="ti-fullscreen fullscreen"></span>
 							</a>							
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" data-toggle="modal" data-target=".proclinic-modal-lg">
-								<span class="ti-search"></span>
-							</a>
-							<div class="modal fade proclinic-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog modal-lorvens">
-									<div class="modal-content proclinic-box-shadow2">
-										<div class="modal-header">
-											<h5 class="modal-title">Search client:</h5>
-											<span class="ti-close" data-dismiss="modal" aria-label="Close">
-											</span>
-										</div>
-										<div class="modal-body">
-											<form>
-												<div class="form-group">
-													<input type="text" class="form-control" id="search-term" placeholder="Type text here">
-													<button type="button" class="btn btn-lorvens proclinic-bg">
-														<span class="ti-location-arrow"></span> Recherche</button>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-							 aria-expanded="false">
-								<span class="ti-announcement"></span>
-							</a>
-							<div class="dropdown-menu proclinic-box-shadow2 notifications animated flipInY">
-								<h5>Notifications</h5>
-								<a class="dropdown-item" href="#">
-									<span class="ti-wheelchair"></span> New client Added</a>
-				
-								<a class="dropdown-item" href="#">
-									<span class="ti-time"></span>client operation booked</a>
-								<a class="dropdown-item" href="#">
-									<span class="ti-wheelchair"></span> New client Added</a>
-							</div>
-						</li>
+						
+						
 						<li class="nav-item">
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
 							 aria-expanded="false">
@@ -153,8 +114,7 @@
 								<div class="dropdown-menu">
 									<a class="dropdown-item" href="{% url 'employe:add_client' %}">Add client</a>
 									<a class="dropdown-item" href="{% url 'employe:client_show' %}">All clients</a>
-									<a class="dropdown-item" href="about-client.html">client Details</a>
-									<a class="dropdown-item" href="edit-client.html">Edit client</a>
+									
 								</div>
 							</li>
 							
@@ -164,26 +124,14 @@
 								<div class="dropdown-menu">
 									<a class="dropdown-item" href="{% url 'employe:add_operation' %}">Add operation</a>
 									<a class="dropdown-item" href="{% url 'employe:all_operation' %}">All operations</a>
-									<a class="dropdown-item" href="about-operation.html">operation Details</a>
-									<a class="dropdown-item" href="edit-operation.html">Edit operation</a>
+									
+									
 								</div>
 							</li>
 							
 							
 							
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-								 aria-expanded="false"><span class="ti-file"></span> Other Pages</a>
-								<div class="dropdown-menu">
-									<a class="dropdown-item" href="login.html">Login </a>
-									<a class="dropdown-item" href="sign-up.html">Sign Up</a>
-									<a class="dropdown-item" href="404.html">404</a>
-									<a class="dropdown-item" href="blank-page.html">Blank Page</a>
-									<a class="dropdown-item" href="pricing.html">Pricing</a>
-									<a class="dropdown-item" href="faq.html">FAQ</a>
-									<a class="dropdown-item" href="invoice.html">Invoice</a>
-								</div>
-							</li>
+							
 						</ul>
 					</div>
 				</nav>
@@ -195,13 +143,7 @@
 
 			{% endblock %}
 
-            <!--Copy Rights-->
-			<div class="container">
-				<div class="d-sm-flex justify-content-center">
-				  <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2024 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
-				</div>
-			</div>
-			<!-- /Copy Rights-->
+            
 		</div>
 		<!-- /Page Content -->
 	</div>
