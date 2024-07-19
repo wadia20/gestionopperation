@@ -5,9 +5,9 @@ from .views import OperationListView,operation_list_pdf,Clients_show, Generate_p
 app_name = "employe"
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('login/', views.login_employe, name='login'),
-    path('login/', views.logout_employe, name='logoutw'),
+  
+    path('', views.login_employe, name='login'),
+    path('logout/', views.logout_employe, name='logoutw'),
     
     path('dashboard/', views.DashboardView.as_view(), name='base'),
     path('client/add',views.ADD_CLIENT,name='add_client'),
@@ -15,10 +15,14 @@ urlpatterns = [
     path('operation/all',OperationListView.as_view(),name='all_operation'),
     path('operations/pdf/',operation_list_pdf, name='operationlistpdf'),
     path('client/search/', views.search_clients, name='search_clients'),  # Search path
-
     path('clients/<str:client_id>',views.operation_details, name='detailsop'),
     path('client/show', Clients_show.as_view(), name='client_show'),
     path('clients/<str:client_id>/pdf/<int:operation_id>/', views.Generate_pdf, name='generate_pdf'),
     path('searchoperation/', views.search_operations, name='search_operations'),
     path('dash', views.home, name='Dashboard'),
+    path('delete_operations/', views.delete_operations, name='delete_operations'),
+    path('edit_operation/', views.edit_operation, name='edit_operation'),
+    path('edit_operation/', views.edit_operation, name='edit_operation'),
+    path('edit_operation/<int:operation_id>/', views.edit_operation, name='edit_operation_with_id'),
 ]
+

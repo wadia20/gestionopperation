@@ -13,7 +13,7 @@ from xhtml2pdf import pisa
 
 # home page
 def home(request):
-    return render(request, "home.html")
+    return render(request, "login.html")
 
 def base(request):
     return render(request, "dashboard.html")
@@ -258,3 +258,54 @@ def operation_details(request,client_id):
 
     return render(request, 'client/specifique_operations.html',context)
     
+from django.urls import reverse
+
+#delete operation
+def delete_operations(request):
+    query = request.GET.get('query')
+    if query:
+        operations = Operation.objects.filter(client_id__icontains=query)
+    else:
+        operations = Operation.objects.all()
+
+    if request.method == 'POST':
+        operation_id = request.POST.get('operation_id')
+        if operation_id:
+            operation_to_delete = get_object_or_404(Operation, id=operation_id)
+            operation_to_delete.delete()
+            messages.success(request, 'L\'opération a été supprimée avec succès.')
+            return redirect(reverse('employe:delete_operations') + f'?query={query}')
+
+    return render(request, 'client/delete_operation.html', {'operations': operations})
+
+#edit operation 
+def edit_operation(request, operation_id=None):
+    operation = None
+
+    if operation_id:
+        operation = get_object_or_404(Operation, id=operation_id)
+    else:
+        client_id = request.GET.get('client_id')
+        operation_date = request.GET.get('operation_date')
+
+        if client_id and operation_date:
+            try:
+                operation = Operation.objects.get(client_id=client_id, operation_date=operation_date)
+            except Operation.DoesNotExist:
+                messages.error(request, "Operation not found")
+
+    if request.method == 'POST':
+        if operation:
+            form = OperationForm(request.POST, request.FILES, instance=operation)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Operation updated successfully")
+                return redirect('employe:edit_operation')
+        else:
+            messages.error(request, "Invalid operation")
+
+    context = {
+        'operation': operation
+    }
+
+    return render(request, 'client/edit_operation.html', context)
