@@ -156,6 +156,7 @@ class Clients_show(View):
         }
         return render(request, 'client/show_client.html', context)
 
+
 def search_clients(request):
     query = request.GET.get('query', '').strip()
     clients = Client.objects.filter(client_id=query) if query else Client.objects.none()
@@ -309,3 +310,56 @@ def edit_operation(request, operation_id=None):
     }
 
     return render(request, 'client/edit_operation.html', context)
+
+
+#delete a client
+def delete_client(request):
+    query = request.GET.get('query')
+    if query:
+        clients = Client.objects.filter(client_id__icontains=query)
+
+    else:
+        clients = Client.objects.all()
+
+    if request.method == 'POST':
+        client_id = request.POST.get('client_id')
+        if client_id:
+            client_to_delete = get_object_or_404(Client, client_id=client_id)
+            operations = Operation.objects.filter(client_id=client_id)
+            messages.success(request, 'le client '+client_to_delete.client_Name +' a été supprimée avec succès.')
+            operations.delete()
+            client_to_delete.delete()
+            return redirect(reverse('employe:delete_client'))
+    for client in clients:
+            operations_count = Operation.objects.filter(client_id=client.client_id).count()
+            client.operations_count = operations_count
+            client.operations = Operation.objects.filter(client_id=client.client_id)
+    return render(request, 'client/delete_client.html', {'clients': clients})
+
+from .form import ClientForm
+
+def edit_client(request):
+    client_id = request.GET.get('client_id')
+    client = None
+    if client_id:
+        try:
+            client = Client.objects.get(client_id=client_id)
+        except Client.DoesNotExist:
+            messages.error(request, 'Client ID does not exist. Please try again.')
+            return redirect('employe:edit_client')
+    return render(request, 'client/edit_client.html', {'client': client})
+
+def edit_client_with_id(request, client_id):
+    client = get_object_or_404(Client, client_id=client_id)
+    if request.method == 'POST':
+        form = ClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Client updated successfully!')
+            return redirect('employe:edit_client')
+        else:
+            print(form.errors)
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ClientForm(instance=client)
+    return render(request, 'client/edit_client.html', {'form': form, 'client': client})
