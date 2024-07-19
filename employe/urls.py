@@ -21,8 +21,11 @@ urlpatterns = [
     path('searchoperation/', views.search_operations, name='search_operations'),
     path('dash', views.home, name='Dashboard'),
     path('delete_operations/', views.delete_operations, name='delete_operations'),
+    path('delete_client/', views.delete_client, name='delete_client'),  
     path('edit_operation/', views.edit_operation, name='edit_operation'),
-    path('edit_operation/', views.edit_operation, name='edit_operation'),
+    path('edit_client/', views.edit_client, name='edit_client'),  
     path('edit_operation/<int:operation_id>/', views.edit_operation, name='edit_operation_with_id'),
+    path('edit_client/', views.edit_client, name='edit_client'),
+    path('edit_client/<str:client_id>/', views.edit_client_with_id, name='edit_client_with_id'),
 ]
 
