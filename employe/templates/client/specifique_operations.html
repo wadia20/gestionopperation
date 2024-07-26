@@ -70,20 +70,21 @@
                                 <th>Operation</th>
                                 <th>Date d'Operation</th>
                                 <th>Observation</th>
-                                <th>Piece Jointe</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for operation in operations %}
                             <tr>
-                                <td>{{ operation.operation }}</td>
+                                <td><a href="{%url 'employe:detailoperation' operation_id=operation.id %}">{{ operation.operation }}</a></td>
                                 <td>{{ operation.operation_date }}</td>
                                 <td>{{ operation.observation }}</td>
-                                {% if operation.piece_jointe %}
+                                {% comment %} {% if operation.piece_jointe %}
                                     <td><a class="dropdown-item" href="{% url 'employe:generate_pdf' client_id=client_id operation_id=operation.id %}?filename={{ operation.piece_jointe.name }}">PDF</a></td>
                                 {% else %}
                                     <td>Non trouve</td>
-                                {% endif %}
+                                {% endif %} {% endcomment %}
+                            
                             </tr>
                             {% endfor %}
                         </tbody>

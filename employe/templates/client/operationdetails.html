@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="container mt-0">
+    <div class="row breadcrumb-bar">
+        <div class="col-md-6">
+            <h3 class="block-title">Operations</h3>
+        </div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'employe:base' %}">
+                        <span class="ti-home"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Operations</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- /Page Title -->
+
+<!-- /Breadcrumb -->
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Details de l'operation</h3>
+                    <p><strong>CIN du client:</strong>      {{ operation.client_id }}</p>
+                    <p><strong>Nom de l'Operation:</strong>      {{ operation.operation }}</p>
+                    <p><strong>Date de l'Operation:</strong>    {{ operation.operation_date }}</p>
+                    <p><strong>Observation:</strong>    {{ operation.observation }}</p>
+                    <p><strong>Fichier Joint:</strong> {% if operation.piece_jointe %}
+                        <a style="color: red;" href="{% url 'employe:generate_pdf' client_id=operation.client_id operation_id=operation.id %}?filename={{ operation.piece_jointe.name }}">PDF</a>
+                        {% else %}
+                            Aucun fichier joint
+                        {% endif %}</p>
+                    <p><strong>Confirmé:</strong>{{ operation.confirmed|yesno:"Oui,Non" }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
+</div>
+<!-- /Main Content -->
+<!--Copy Rights-->
+
+<!-- /Copy Rights-->
+</div>
+<!-- /Page Content -->
+</div>
+<!-- Back to Top -->
+<a id="back-to-top" href="#" class="back-to-top">
+    <span class="ti-angle-up"></span>
+</a>
+<!-- /Back to Top -->
+<!-- Jquery Library-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<!-- Popper Library-->
+<script src="js/popper.min.js"></script>
+<!-- Bootstrap Library-->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Datatable  -->
+<script src="datatable/jquery.dataTables.min.js"></script>
+<script src="datatable/dataTables.bootstrap4.min.js"></script>
+
+<!-- Custom Script-->
+<script src="js/custom.js"></script>
+
+</body>
+{% endblock %}
+</html>
