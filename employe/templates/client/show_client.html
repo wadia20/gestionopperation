@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+
 {% block content %}
-				<!-- Page Title -->
+<!-- Page Title -->
 <div class="container mt-0">
     <div class="row breadcrumb-bar">
         <div class="col-md-6">
@@ -19,69 +20,90 @@
         </div>
     </div>
 </div>
+
 <!-- Search Form -->
 <div class="container">
-    <form method="get" action="{% url 'employe:search_clients' %}">
-        <div class="form-group">
-            <label for="query">Search by Client ID:</label>
-            <input type="text" name="query" id="query" class="form-control" placeholder="Enter Client ID" value="{{ request.GET.query }}">
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+    <div class="d-flex justify-content-between align-items-center">
+        <form method="get" action="{% url 'employe:search_clients' %}" class="d-flex">
+            <div class="form-group mb-0 mr-2">
+                <label for="query" class="sr-only">Recherche par contact Client ID:</label>
+                <input type="text" name="query" id="query" class="form-control" placeholder="Enter Client ID" value="{{ request.GET.query }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <a href="{% url 'employe:add_client' %}" class="btn btn-secondary">+ Nouveau contact</a>
+    </div>
 </div>
-<!-- Main Content -->
-<div class="container">
 
-	<div class="row">
-		<!-- Widget Item -->
-		<div class="col-md-12">
-			<div class="widget-area-2 proclinic-box-shadow">
-				<h3 class="widget-title">List des clients</h3>							
-				<div class="table-responsive mb-3">
-					<table id="tableId" class="table table-bordered table-striped">
-						<thead>
-							<tr>								
-								<th>CIN</th>
-								<th>Nom</th>
-								<th>nombre d'operation</th>								
-							</tr>
-						</thead>
-						<tbody>
-							{% if clients %}
-								{% for client in clients %}
-									<tr>								
-										<td><a href="{% url 'employe:detailsop' client_id=client.client_id %}">{{ client.client_id }}</a></td></a>
-										<td>{{ client.client_Name }}</td>
-										<td>{{ client.operations_count }}</td>										
-									</tr>
-								{% endfor %}
-							{% else %}
-								<p>clients non trouves avec de CIN.</p>
-							{% endif %}
-						</tbody>
-					</table>									
-				</div>
-			</div>
-		</div>
-		<!-- /Widget Item -->
-	</div>
+<!-- Main Content -->
+<div class="container mt-4">
+    <div class="row">
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Liste des clients</h3>
+
+                <!-- Alerts -->
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <!-- /Alerts -->
+
+                <div class="table-responsive mb-3">
+                    <table id="tableId" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>CIN</th>
+                                <th>Nom</th>
+                                <th>Nombre d'opérations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if clients %}
+                                {% for client in clients %}
+                                    <tr>
+                                        <td><a href="{% url 'employe:detailsop' client_id=client.client_id %}">{{ client.client_id }}</a></td>
+                                        <td>{{ client.client_Name }}</td>
+                                        <td>{{ client.operations_count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">Aucun client trouvé avec ce CIN.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
 </div>
-<!-- /Main Content -->
-<!--Copy Rights-->
+
+<!-- Copy Rights -->
 <div class="container">
-	<div class="d-sm-flex justify-content-center">
-		<span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
-	</div>
+    <div class="d-sm-flex justify-content-center">
+        <span class="text-muted text-center d-block d-sm-inline-block">Copyright © 2018 <a href="http://www.konnectplugins.com/" target="_blank">konnectcode</a>. All rights reserved.</span>
+    </div>
 </div>
-<!-- /Copy Rights-->
-</div>
-<!-- /Page Content -->
-</div>
+{% endblock %}
+
 <!-- Back to Top -->
 <a id="back-to-top" href="#" class="back-to-top">
-<span class="ti-angle-up"></span>
+    <span class="ti-angle-up"></span>
 </a>
 <!-- /Back to Top -->
+
 <!-- Jquery Library-->
 <script src="js/jquery-3.2.1.min.js"></script>
 <!-- Popper Library-->
@@ -89,13 +111,26 @@
 <!-- Bootstrap Library-->
 <script src="js/bootstrap.min.js"></script>
 
-<!-- Datatable  -->
+<!-- Datatable -->
 <script src="datatable/jquery.dataTables.min.js"></script>
 <script src="datatable/dataTables.bootstrap4.min.js"></script>
 
 <!-- Custom Script-->
 <script src="js/custom.js"></script>
 <script src="js/custom-datatables.js"></script>
-</body>
-</html>
-{% endblock %}
+
+<!-- Success Alert Handling -->
+<script>
+    $(document).ready(function() {
+        // Check if there's a success message
+        var alert = $('#success-alert');
+        if (alert.length) {
+            // Show alert
+            alert.fadeIn();
+            // Hide alert after 5 seconds
+            setTimeout(function() {
+                alert.fadeOut();
+            }, 5000);
+        }
+    });
+</script>

@@ -69,7 +69,7 @@ def ADD_CLIENT(request):
         try:
             client.save()
             messages.success(request, 'Client added successfully!')
-            return redirect('employe:add_client')
+            return redirect('employe:client_show')  # Redirect to client list
         except IntegrityError:
             messages.error(request, 'Client ID already exists.')
             return render(request, 'client/add_client.html')
@@ -103,7 +103,6 @@ def ADD_OPERATION(request):
         form = OperationForm()  # Ensure form is initialized for GET request
 
     return render(request, 'client/add_operation.html', {'form': form})
-
 
 from django.views.generic import ListView
 #showing list of operations
@@ -248,17 +247,26 @@ class DashboardView(TemplateView):
 
         return context
 
+from django.shortcuts import get_object_or_404
+
+
 def operation_details(request,client_id):
 
     operations = Operation.objects.filter(client_id=client_id)
+
+    client = get_object_or_404(Client, client_id=client_id)  # Fetch client details
+     
+
+   
     clientid= client_id
     context = {
         'client_id': clientid,
         'operations': operations,
+        'client':client,
     } 
 
     return render(request, 'client/specifique_operations.html',context)
-    
+
 from django.urls import reverse
 
 #delete operation
@@ -356,9 +364,8 @@ def edit_client_with_id(request, client_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Client updated successfully!')
-            return redirect('employe:edit_client')
+            return redirect('employe:detailsop', client_id=client_id)
         else:
-            print(form.errors)
             messages.error(request, 'Please correct the errors below.')
     else:
         form = ClientForm(instance=client)
