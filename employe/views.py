@@ -267,6 +267,8 @@ def operation_details(request,client_id):
 
     return render(request, 'client/specifique_operations.html',context)
 
+
+
 from django.urls import reverse
 
 #delete operation
@@ -370,3 +372,10 @@ def edit_client_with_id(request, client_id):
     else:
         form = ClientForm(instance=client)
     return render(request, 'client/edit_client.html', {'form': form, 'client': client})
+
+def detail1_operation(request,operation_id):
+
+
+    operation = get_object_or_404(Operation, id=operation_id)
+    
+    return render(request, 'client/operationdetails.html',{'operation': operation})
