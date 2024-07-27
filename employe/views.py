@@ -272,50 +272,50 @@ def operation_details(request,client_id):
 from django.urls import reverse
 
 #delete operation
-def delete_operations(request):
-    query = request.GET.get('query')
-    if query:
-        operations = Operation.objects.filter(client_id__icontains=query)
-    else:
-        operations = Operation.objects.all()
+# def delete_operations(request):
+#     query = request.GET.get('query')
+#     if query:
+#         operations = Operation.objects.filter(client_id__icontains=query)
+#     else:
+#         operations = Operation.objects.all()
 
-    if request.method == 'POST':
-        operation_id = request.POST.get('operation_id')
-        if operation_id:
-            operation_to_delete = get_object_or_404(Operation, id=operation_id)
-            operation_to_delete.delete()
-            messages.success(request, 'L\'opération a été supprimée avec succès.')
-            return redirect(reverse('employe:delete_operations') + f'?query={query}')
+#     if request.method == 'POST':
+#         operation_id = request.POST.get('operation_id')
+#         if operation_id:
+#             operation_to_delete = get_object_or_404(Operation, id=operation_id)
+#             operation_to_delete.delete()
+#             messages.success(request, 'L\'opération a été supprimée avec succès.')
+#             return redirect(reverse('employe:delete_operations') + f'?query={query}')
 
-    return render(request, 'client/delete_operation.html', {'operations': operations})
+#     return render(request, 'client/delete_operation.html', {'operations': operations})
+def delete_operation(request, operation_id):
+    operation = get_object_or_404(Operation, id=operation_id)
+    client_id = operation.client_id
+    operation.delete()
+    messages.success(request, "Operation deleted successfully")
+    return redirect('employe:detailsop', client_id=client_id)
 
 #edit operation 
-def edit_operation(request, operation_id=None):
-    operation = None
-
-    if operation_id:
-        operation = get_object_or_404(Operation, id=operation_id)
-    else:
-        client_id = request.GET.get('client_id')
-        operation_date = request.GET.get('operation_date')
-
-        if client_id and operation_date:
-            try:
-                operation = Operation.objects.get(client_id=client_id, operation_date=operation_date)
-            except Operation.DoesNotExist:
-                messages.error(request, "Operation not found")
-
+def edit_operation(request, operation_id):
+    operation = get_object_or_404(Operation, id=operation_id)
+    
     if request.method == 'POST':
-        if operation:
-            form = OperationForm(request.POST, request.FILES, instance=operation)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Operation updated successfully")
-                return redirect('employe:edit_operation')
+        form = OperationForm(request.POST, request.FILES, instance=operation)
+        if form.is_valid():
+            client_id = form.cleaned_data['client_id']
+            if not Client.objects.filter(client_id=client_id).exists():
+                messages.error(request, "aucun client trouve avec ce CIN il faut l'ajouter.")
+                return redirect('employe:add_client') 
+            form.save()
+            messages.success(request, "Operation updated successfully")
+            return redirect('employe:detailsop', client_id=operation.client_id)
         else:
             messages.error(request, "Invalid operation")
+    else:
+        form = OperationForm(instance=operation)
 
     context = {
+        'form': form,
         'operation': operation
     }
 
@@ -378,4 +378,4 @@ def detail1_operation(request,operation_id):
 
     operation = get_object_or_404(Operation, id=operation_id)
     
-    return render(request, 'client/operationdetails.html',{'operation': operation})
+    return render(request, 'client/operation_detail.html',{'operation': operation})

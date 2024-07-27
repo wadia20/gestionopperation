@@ -36,35 +36,10 @@
 <!-- Main Content -->
 <div class="container">
     <div class="row">
-        <!-- Search Form -->
-        <div class="col-md-12">
-            <div class="widget-area-2 proclinic-box-shadow">
-                <h3 class="widget-title">Recherche de l'operation à modifier</h3>
-                <form method="GET" action="{% url 'employe:edit_operation' %}">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="client-id">CIN du client </label>
-                            <input type="text" class="form-control" placeholder="CIN" id="client-id" name="client_id">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="operation-date">Date de l'opération</label>
-                            <input type="date" class="form-control" id="operation-date" name="operation_date">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <button type="submit" class="btn btn-primary btn-lg">Rechercher</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- /Search Form -->
-
-        <!-- Edit Form -->
-        {% if operation %}
         <div class="col-md-12">
             <div class="widget-area-2 proclinic-box-shadow">
                 <h3 class="widget-title">Editer l'operation</h3>
-                <form method="POST" action="{% url 'employe:edit_operation_with_id' operation.id %}" enctype="multipart/form-data" >
+                <form method="POST" action="{% url 'employe:edit_operation' operation.id %}" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -102,7 +77,7 @@
                 </form>
             </div>
         </div>
-        {% endif %}
+        
         <!-- /Edit Form -->
     </div>
 </div>
