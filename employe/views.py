@@ -378,4 +378,4 @@ def detail1_operation(request,operation_id):
 
     operation = get_object_or_404(Operation, id=operation_id)
     
-    return render(request, 'client/operationdetails.html',{'operation': operation})
+    return render(request, 'client/operation_detail.html',{'operation': operation})
