@@ -141,10 +141,14 @@ def operation_list_pdf(request):
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from .models import Client, Operation
-
+from django.core.paginator import Paginator
 class Clients_show(View):
     def get(self, request):
-        clients = Client.objects.all()
+        clients_list = Client.objects.all()
+        paginator = Paginator(clients_list, 10)  # Show 10 clients per page.
+        page_number = request.GET.get('page')
+        clients = paginator.get_page(page_number)
+        
         for client in clients:
             operations_count = Operation.objects.filter(client_id=client.client_id).count()
             client.operations_count = operations_count
@@ -158,7 +162,12 @@ class Clients_show(View):
 
 def search_clients(request):
     query = request.GET.get('query', '').strip()
-    clients = Client.objects.filter(client_id=query) if query else Client.objects.none()
+    clients_list = Client.objects.filter(client_id=query) if query else Client.objects.none()
+    
+    paginator = Paginator(clients_list, 10)  # Show 10 clients per page.
+    page_number = request.GET.get('page')
+    clients = paginator.get_page(page_number)
+    
     for client in clients:
         operations_count = Operation.objects.filter(client_id=client.client_id).count()
         client.operations_count = operations_count
@@ -250,22 +259,22 @@ class DashboardView(TemplateView):
 from django.shortcuts import get_object_or_404
 
 
-def operation_details(request,client_id):
+def operation_details(request, client_id):
+    client = get_object_or_404(Client, client_id=client_id)
+    operations_list = Operation.objects.filter(client_id=client_id)
 
-    operations = Operation.objects.filter(client_id=client_id)
+    # Pagination logic
+    paginator = Paginator(operations_list, 10)  # Show 10 operations per page
+    page_number = request.GET.get('page')
+    operations = paginator.get_page(page_number)
 
-    client = get_object_or_404(Client, client_id=client_id)  # Fetch client details
-     
-
-   
-    clientid= client_id
     context = {
-        'client_id': clientid,
+        'client_id': client_id,
         'operations': operations,
-        'client':client,
-    } 
+        'client': client,
+    }
 
-    return render(request, 'client/specifique_operations.html',context)
+    return render(request, 'client/specifique_operations.html', context)
 
 
 
@@ -323,28 +332,17 @@ def edit_operation(request, operation_id):
 
 
 #delete a client
-def delete_client(request):
-    query = request.GET.get('query')
-    if query:
-        clients = Client.objects.filter(client_id__icontains=query)
-
-    else:
-        clients = Client.objects.all()
+def delete_client(request, client_id):
+    client = get_object_or_404(Client, client_id=client_id)
 
     if request.method == 'POST':
-        client_id = request.POST.get('client_id')
-        if client_id:
-            client_to_delete = get_object_or_404(Client, client_id=client_id)
-            operations = Operation.objects.filter(client_id=client_id)
-            messages.success(request, 'le client '+client_to_delete.client_Name +' a été supprimée avec succès.')
-            operations.delete()
-            client_to_delete.delete()
-            return redirect(reverse('employe:delete_client'))
-    for client in clients:
-            operations_count = Operation.objects.filter(client_id=client.client_id).count()
-            client.operations_count = operations_count
-            client.operations = Operation.objects.filter(client_id=client.client_id)
-    return render(request, 'client/delete_client.html', {'clients': clients})
+        operations = Operation.objects.filter(client_id=client_id)
+        operations.delete()
+        client.delete()
+        messages.success(request, 'Client ' + client.client_Name + ' has been deleted successfully.')
+        return redirect('employe:client_show')
+
+    return render(request, 'client/delete_client.html', {'client': client})
 
 from .form import ClientForm
 
@@ -379,3 +377,6 @@ def detail1_operation(request,operation_id):
     operation = get_object_or_404(Operation, id=operation_id)
     
     return render(request, 'client/operation_detail.html',{'operation': operation})
+
+
+

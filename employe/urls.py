@@ -21,7 +21,7 @@ urlpatterns = [
     path('searchoperation/', views.search_operations, name='search_operations'),
     path('dash', views.home, name='Dashboard'),
     path('operation/delete/<int:operation_id>/', views.delete_operation, name='delete_operation'),
-    path('delete_client/', views.delete_client, name='delete_client'),  
+    path('delete_client/<str:client_id>', views.delete_client, name='delete_client'),  
     
     path('edit_client/', views.edit_client, name='edit_client'),  
     path('edit_operation/<int:operation_id>/', views.edit_operation, name='edit_operation'),

@@ -40,7 +40,7 @@
 
                 <div class="d-flex justify-content-start mt-3">
                     <a href="{% url 'employe:edit_client_with_id' client_id=client.client_id %}" class="btn btn-warning mr-2">Edit</a>
-                    <a href="{% url 'employe:delete_client' %}?query={{ client.client_id }}" class="btn btn-danger mr-2" onclick="return confirm('Are you sure you want to delete this client?')">Delete</a>
+                    <button class="btn btn-danger mr-2" data-toggle="modal" data-target="#deleteClientModal" data-client-id="{{ client.client_id }}">Delete</button>
                     <a href="{% url 'employe:add_operation' %}?client_id={{ client.client_id }}" class="btn btn-secondary">+ Nouveau Operation</a>
                 </div>
             </div>
@@ -82,7 +82,6 @@
                                         {{ operation.operation }}
                                     </a>
                                 </td>
-                                
                                 <td>{{ operation.operation_date }}</td>
                                 <td>{{ operation.observation }}</td>
                                 <td>
@@ -96,24 +95,86 @@
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
-                            
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Pagination controls -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if operations.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if query %}&query={{ query }}{% endif %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                    <span class="sr-only">First</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ operations.previous_page_number }}{% if query %}&query={{ query }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                    <span class="sr-only">First</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">Page {{ operations.number }} of {{ operations.paginator.num_pages }}</span></li>
+                        {% if operations.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ operations.next_page_number }}{% if query %}&query={{ query }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ operations.paginator.num_pages }}{% if query %}&query={{ query }}{% endif %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                    <span class="sr-only">Last</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                    <span class="sr-only">Last</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                <!-- /Pagination controls -->
             </div>
         </div>
         <!-- /Widget Item -->
     </div>
 </div>
 <!-- /Main Content -->
- <!-- Modal -->
+ 
+<!-- Modal -->
 <div class="modal fade" id="operationModal" tabindex="-1" role="dialog" aria-labelledby="operationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                
+                <h5 class="modal-title" id="operationModalLabel">Operation Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -131,7 +192,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
 <script>
 $(document).ready(function(){
     $('#operationModal').on('show.bs.modal', function (event) {
@@ -144,6 +204,20 @@ $(document).ready(function(){
             success: function(data) {
                 // Populate the modal body with the data
                 $('.modal-body').html(data);
+            }
+        });
+    });
+    
+    $('#deleteClientModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var clientId = button.data('client-id'); // Extract client id
+        
+        // Use AJAX to get the details of the delete confirmation
+        $.ajax({
+            url: "{% url 'employe:delete_client' client_id=0 %}".replace('0', clientId),
+            success: function(data) {
+                // Populate the modal body with the data
+                $('#deleteClientModal .modal-body').html(data);
             }
         });
     });
