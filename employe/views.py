@@ -114,6 +114,18 @@ class OperationListView(ListView):
     model = Operation
     template_name = 'client/operation_list.html'
     context_object_name = 'operations'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+        context['operations'] = page_obj.object_list
+        return context
+
+
 
 def operation_list_pdf(request):
     query = request.GET.get('query')

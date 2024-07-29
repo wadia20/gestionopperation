@@ -4,7 +4,7 @@
     <p><strong>CIN du client:</strong> {{ operation.client_id }}</p>
     <p><strong>Nom de l'Operation:</strong> {{ operation.operation }}</p>
     <p><strong>Date de l'Operation:</strong> {{ operation.operation_date }}</p>
-    <p><strong>Observation:</strong> {{ operation.observation }}</p>
+    <textarea rows="10" cols="50" readonly>{{ operation.observation }}</textarea>
     <p><strong>Fichier Joint:</strong>
         {% if operation.piece_jointe %}
             <a style="color: red;" href="{% url 'employe:generate_pdf' client_id=operation.client_id operation_id=operation.id %}?filename={{ operation.piece_jointe.name }}">PDF</a>
