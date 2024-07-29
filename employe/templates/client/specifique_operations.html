@@ -189,6 +189,24 @@
     </div>
 </div>
 
+<!-- Modal for Deleting Client -->
+<div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="deleteClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteClientModalLabel">Delete Client</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded here dynamically -->
+            </div>
+            
+        </div>
+    </div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -218,10 +236,24 @@ $(document).ready(function(){
             success: function(data) {
                 // Populate the modal body with the data
                 $('#deleteClientModal .modal-body').html(data);
+                
+                // Handle the delete confirmation
+                $('#confirmDelete').off('click').on('click', function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'employe:delete_client' client_id=0 %}".replace('0', clientId),
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            // Redirect or show success message
+                            window.location.href = "{% url 'employe:client_show' %}";
+                        }
+                    });
+                });
             }
         });
     });
 });
 </script>
-
 {% endblock %}
