@@ -24,14 +24,16 @@
 
 <!-- Search Form -->
 <div class="container">
-    <form method="get" action="{% url 'employe:search_operations' %}">
-        <div class="form-group">
-            <label for="query">Recherche par CIN:</label>
-            <input type="text" name="query" id="query" class="form-control" placeholder="Entrez CIN du client
-            " value="{{ request.GET.query }}">
-        </div>
-        <button type="submit" class="btn btn-primary">Recherche</button>
-    </form>
+    <div class="d-flex justify-content-between align-items-center">
+        <form method="get" action="{% url 'employe:search_operations' %}" class="d-flex">
+            <div class="form-group mb-0 mr-2">
+                <label for="query" class="sr-only">Recherche par contact Client ID:</label>
+                <input type="text" name="query" id="query" class="form-control" placeholder="Enter Client ID" value="{{ request.GET.query }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Recherche</button>
+        </form>
+        <a href="{% url 'employe:add_operation' %}" class="btn btn-secondary">+ Nouveau operation</a>
+    </div>
 </div>
 
 <!-- Main Content -->
@@ -49,25 +51,82 @@
                                 <th>Operation</th>
                                 <th>Date d'Operation </th>
                                 <th>Observation</th>
-                                
                             </tr>
                         </thead>
                         <tbody>
                             {% for operation in operations %}
                             <tr>
-                                <td>{{ operation.client_id }}</td>
-                                <td>{{ operation.operation }}</td>
+                                <td><a href="{% url 'employe:detailsop' client_id=operation.client_id %}">{{ operation.client_id }}</a></td>                               
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#operationModal" data-operation="{{ operation.id }}">
+                                        {{ operation.operation }}
+                                    </a>
+                                </td>
                                 <td>{{ operation.operation_date }}</td>
                                 <td>{{ operation.observation }}</td>
-                               
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    
-                  
-                    <!-- /Export links -->
-                    
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                        <span class="sr-only">First</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                        <span class="sr-only">First</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item active"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                        <span class="sr-only">Last</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                        <span class="sr-only">Last</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
                     <a href="{% url 'employe:operationlistpdf' %}?query={{ request.GET.query }}" class="btn btn-primary">Download PDF</a>
                 </div>
             </div>
@@ -76,5 +135,44 @@
     </div>
 </div>
 <!-- /Main Content -->
+
+<!-- Modal -->
+<div class="modal fade" id="operationModal" tabindex="-1" role="dialog" aria-labelledby="operationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Details will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Modal -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#operationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var operationId = button.data('operation'); // Extract info from data-* attributes
+            
+            // Use AJAX to get the details of the operation
+            $.ajax({
+                url: "{% url 'employe:detailoperation' 0 %}".replace('0', operationId),
+                success: function(data) {
+                    // Populate the modal body with the data
+                    $('.modal-body').html(data);
+                }
+            });
+        });
+    });
+    
+</script>
 
 {% endblock %}
