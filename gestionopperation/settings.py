@@ -134,3 +134,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 #AUTH_USER_MODEL = 'employe.employe'  # Adjust 'your_app' to your actual app name
+import os
+
+MEDIA_URL = '/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')

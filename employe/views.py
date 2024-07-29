@@ -380,3 +380,75 @@ def detail1_operation(request,operation_id):
 
 
 
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from .form import UserUpdateForm, PasswordChangeForm, EmployeeProfileForm
+from .models import Employee
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        if 'profile_picture' in request.FILES or 'profile_picture' in request.POST:
+            profile_form = EmployeeProfileForm(request.POST, request.FILES, instance=request.user.employee)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Profile picture updated successfully.")
+            else:
+                messages.error(request, "Failed to update profile picture.")
+            return redirect('employe:profile')
+        
+        elif 'username' in request.POST or 'email' in request.POST:
+            user_form = UserUpdateForm(request.POST, instance=request.user)
+            if user_form.is_valid():
+                user_form.save()
+                messages.success(request, "User information updated successfully.")
+            else:
+                messages.error(request, "Failed to update user information.")
+            return redirect('employe:profile')
+        
+        elif 'old_password' in request.POST:
+            password_form = PasswordChangeForm(request.POST)
+            if password_form.is_valid():
+                old_password = password_form.cleaned_data['old_password']
+                new_password = password_form.cleaned_data['new_password']
+                if request.user.check_password(old_password):
+                    request.user.set_password(new_password)
+                    request.user.save()
+                    update_session_auth_hash(request, request.user)
+                    messages.success(request, "Password updated successfully.")
+                else:
+                    messages.error(request, "Old password is incorrect.")
+            else:
+                messages.error(request, "Failed to update password.")
+            return redirect('employe:profile')
+    
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        password_form = PasswordChangeForm()
+        profile_form = EmployeeProfileForm(instance=request.user.employee)
+
+    return render(request, 'client/profile.html', {
+        'user_form': user_form,
+        'password_form': password_form,
+        'profile_form': profile_form
+    })
+
+
+
+
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+@login_required
+def clear_profile_picture(request):
+    employee = request.user.employee
+    if employee.profile_picture:
+        employee.profile_picture.delete(save=True)
+        messages.success(request, "Profile picture cleared successfully.")
+    else:
+        messages.info(request, "No profile picture to clear.")
+    return redirect('employe:profile')  # Adjust this to the URL name of your profile view

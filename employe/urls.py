@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from .views import OperationListView,operation_list_pdf,Clients_show, Generate_pdf,DashboardView
 app_name = "employe"
@@ -28,5 +29,11 @@ urlpatterns = [
     path('edit_client/', views.edit_client, name='edit_client'),
     path('edit_client/<str:client_id>/', views.edit_client_with_id, name='edit_client_with_id'),
     path('detailoperation/<int:operation_id>/', views.detail1_operation, name='detailoperation'),
-]
+    path('profile/', views.profile_view, name='profile'),
 
+
+]
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns +=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
