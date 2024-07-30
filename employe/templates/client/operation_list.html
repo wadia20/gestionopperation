@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 
 <!-- Page Title -->
 <div class="container mt-0">
@@ -153,9 +154,13 @@
     </div>
 </div>
 <!-- /Modal -->
+<script src="{% static 'js/bootstrap.min.js'%}"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+<!-- Popper Library-->
+<script src="{% static 'js/popper.min.js'%}"></script>
+<!-- Bootstrap Library-->
+
 <script>
     $(document).ready(function(){
         $('#operationModal').on('show.bs.modal', function (event) {
