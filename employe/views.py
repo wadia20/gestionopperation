@@ -504,3 +504,37 @@ def client_report(request):
         'end_date': end_date,
     }
     return render(request, 'client/client_report.html', context)
+
+
+def operation_report(request):
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if start_date and end_date:
+            try:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+                # Query operations within the date range
+                operations = Operation.objects.filter(
+                    operation_date__range=(start_date, end_date)
+                )
+
+                paginator = Paginator(operations, 10)  # 10 operations per page
+                page_number = request.GET.get('page')
+                page_obj = paginator.get_page(page_number)
+
+                context = {
+                    'operations': page_obj,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                }
+                return render(request, 'client/operation_report.html', context)
+
+            except ValueError:
+                messages.error(request, "Invalid date format. Please use YYYY-MM-DD.")
+        else:
+            messages.error(request, "Both start and end dates are required.")
+
+    return render(request, 'client/operation_report.html')

@@ -31,6 +31,8 @@ urlpatterns = [
     path('detailoperation/<int:operation_id>/', views.detail1_operation, name='detailoperation'),
     path('profile/', views.profile_view, name='profile'),
     path('client_report/', views.client_report, name='client_report'),
+    path('operation_report/', views.operation_report, name='operation_report'),
+
 
 
 ]
