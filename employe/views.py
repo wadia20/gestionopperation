@@ -246,8 +246,23 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['operations'] = Operation.objects.order_by('-operation_date')[:5]
-        context['employees'] = Employee.objects.all()
+        
+        # Operations pagination
+        operations_list = Operation.objects.order_by('-operation_date')
+        paginator_operations = Paginator(operations_list, 5)  # Show 5 operations per page
+
+        page_number_operations = self.request.GET.get('page_operations')
+        page_obj_operations = paginator_operations.get_page(page_number_operations)
+        context['page_obj_operations'] = page_obj_operations
+
+        # Employees pagination
+        employees_list = Employee.objects.all()
+        paginator_employees = Paginator(employees_list, 10)  # Show 10 employees per page
+
+        page_number_employees = self.request.GET.get('page_employees')
+        page_obj_employees = paginator_employees.get_page(page_number_employees)
+        context['page_obj_employees'] = page_obj_employees
+
         context['clients_count'] = Client.objects.count()
 
         total_operations = Operation.objects.count()
