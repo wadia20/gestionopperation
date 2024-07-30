@@ -464,3 +464,43 @@ def clear_profile_picture(request):
     else:
         messages.info(request, "No profile picture to clear.")
     return redirect('employe:profile')  # Adjust this to the URL name of your profile view
+
+
+#rapport def client_report(request):
+from django.utils.timezone import datetime
+
+def client_report(request):
+    clients = []
+    start_date = ''
+    end_date = ''
+
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        
+        # Convert date strings to datetime objects
+        start_datetime = datetime.strptime(start_date, '%Y-%m-%d').date()
+        end_datetime = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+        # Query operations within the specified date range
+        operations = Operation.objects.filter(operation_date__range=(start_datetime, end_datetime))
+
+        # Get unique client_ids from the operations
+        client_ids = operations.values_list('client_id', flat=True).distinct()
+
+        # Query clients based on the client_ids
+        clients = Client.objects.filter(client_id__in=client_ids)
+
+        # Pagination
+        paginator = Paginator(clients, 10)  # Show 10 clients per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+    else:
+        page_obj = []
+
+    context = {
+        'page_obj': page_obj,
+        'start_date': start_date,
+        'end_date': end_date,
+    }
+    return render(request, 'client/client_report.html', context)
