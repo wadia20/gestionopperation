@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 <!-- Page Title -->
 <div class="container mt-0">
     <div class="row breadcrumb-bar">
@@ -75,10 +76,12 @@
                             {% if operations %}
                                 {% for operation in operations %}
                                     <tr>
-                                        <td>{{ operation.client_id }}</td>
+                                        <td><a href="{% url 'employe:detailsop' client_id=operation.client_id %}">{{ operation.client_id }}</a></td>
                                         <td>
-                                            {{ operation.operation }}
-</td>
+                                            <a href="#" data-toggle="modal" data-target="#operationModal" data-operation="{{ operation.id }}">
+                                                {{ operation.operation }}
+                                            </a>
+                                        </td>
                                         <td>{{ operation.operation_date }}</td>
                                         <td>{{ operation.observation }}</td>
                                         <td>
@@ -163,15 +166,53 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="operationModal" tabindex="-1" role="dialog" aria-labelledby="operationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="operationModalLabel">Operation Detailes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Jquery Library-->
+<script src="{% static 'js/bootstrap.min.js'%}"></script>
+
+<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+<!-- Popper Library-->
+<script src="{% static 'js/popper.min.js'%}"></script>
+<script>
+    $(document).ready(function(){
+        $('#operationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var operationId = button.data('operation'); // Extract info from data-* attributes
+            
+            // Use AJAX to get the details of the operation
+            $.ajax({
+                url: "{% url 'employe:detailoperation' 0 %}".replace('0', operationId),
+                success: function(data) {
+                    // Populate the modal body with the data
+                    $('.modal-body').html(data);
+                }
+            });
+        });
+    });
+    
+</script>
 
 {% endblock %}
 
-<!-- Jquery Library-->
-<script src="js/jquery-3.2.1.min.js"></script>
-<!-- Popper Library-->
-<script src="js/popper.min.js"></script>
-<!-- Bootstrap Library-->
-<script src="js/bootstrap.min.js"></script>
+
 <!-- Datatable -->
 <script src="datatable/jquery.dataTables.min.js"></script>
 <script src="datatable/dataTables.bootstrap4.min.js"></script>

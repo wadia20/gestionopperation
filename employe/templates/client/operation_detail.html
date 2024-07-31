@@ -4,6 +4,7 @@
     <p><strong>CIN du contact:</strong> {{ operation.client_id }}</p>
     <p><strong>Nom de l'Operation:</strong> {{ operation.operation }}</p>
     <p><strong>Date de l'Operation:</strong> {{ operation.operation_date }}</p>
+    <label><strong>observation:</strong></label>
     <textarea rows="10" cols="50" readonly>{{ operation.observation }}</textarea>
     <p><strong>Fichier Joint:</strong>
         {% if operation.piece_jointe %}
