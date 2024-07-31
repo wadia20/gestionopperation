@@ -1,7 +1,0 @@
-<!-- delete_client.html -->
-<form method="post" action="{% url 'employe:delete_client' client_id=client.client_id %}">
-    {% csrf_token %}
-    <p>Êtes-vous sûr de vouloir supprimer ce contact ? {{ client.client_Name }}?</p>
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-</form>
